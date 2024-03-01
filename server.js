@@ -10,16 +10,15 @@ env.config({ path: './.env' });
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 // Connect to MongoDB
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB_URL)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log('MongoDB Connection Error:', err));
 
 //  schema
 const trackSchema = new mongoose.Schema({
-    id: { type: Number, required: true },
     artist: { type: String, required: true },
     title: { type: String, required: true },
     length: { type: String, required: true },
@@ -66,24 +65,29 @@ app.post('/addTrack', [
     });
 });
 
-app.get('/findTracks', (req, res) => {
+
+app.get('/findTracks', async (req, res) => {
     console.log('Received GET request to /findTracks');
-    const searchQuery = {};
-    if (req.query.releaseYear) searchQuery.releaseYear = req.query.releaseYear; 
-    if (req.query.genre) searchQuery.genre = req.query.genre;
-    if (req.query.title) searchQuery.title = req.query.title;
-    if (req.query.length) searchQuery.length = req.query.length;
-    if (req.query.id) searchQuery.id = req.query.id;
-    if (req.query.artist) searchQuery.artist = req.query.artist;
-    Track.find(searchQuery, (err, tracks) => {
-        if (!err) {
-            res.send(tracks);
-        } else {
-            res.send(err);
-        }
-    });
+    const searchQuery = buildSearchQuery(req);
+
+    try {
+        const tracks = await Track.find(searchQuery);
+        res.json(tracks); // Send response as JSON
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
+function buildSearchQuery(req) {
+    const searchQuery = {};
+    if (req.query.artist) searchQuery.artist = req.query.artist;
+    if (req.query.title) searchQuery.title = req.query.title;
+    if (req.query.length) searchQuery.length = req.query.length;
+    if (req.query.genre) searchQuery.genre = req.query.genre;
+    if (req.query.releaseYear) searchQuery.releaseYear = parseInt(req.query.releaseYear); // Convert to number
+    return searchQuery;
+}
 app.listen(3000, () => {
     console.log('Server is running on port 3000.');
+    console.log('http://localhost:3000');
 });
