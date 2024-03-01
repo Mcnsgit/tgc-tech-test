@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Song Finder</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 class="title">Song Finder</h1>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/addTrack.html">Add Track</a></li>
+                <li><a href="/search.html">Search</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="container">
+            <h2>Find Track</h2>
+            <form action="/findTracks" method="GET" class="find-track-form">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" placeholder="ID...">
+                <label for="artist">Artist:</label>
+                <input type="text" id="artist" name="artist" placeholder="Artist...">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" placeholder="Title...">
+                <label for="length">Length:</label>
+                <input type="text" id="length" name="length" placeholder="Length...">
+                <label for="genre">Genre:</label>
+                <input type="text" id="genre" name="genre" placeholder="Genre...">
+                <label for="releaseYear">Release Year:</label>
+                <input type="text" id="releaseYear" name="releaseYear" placeholder="Release Year...">
+                <button type="submit">Find Track</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
